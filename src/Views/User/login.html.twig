@@ -1,0 +1,15 @@
+{% extends "default.html.twig" %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/login-form.css">
+{% endblock %}
+{% block content %}
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <form action="/user/login" method="post">
+                <input type="text" id="login" class="fadeIn second" name="username" placeholder="login">
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+        </div>
+    </div>
+{% endblock %}

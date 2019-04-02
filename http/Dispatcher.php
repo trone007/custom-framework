@@ -11,11 +11,18 @@ class Dispatcher
     /** @var Container */
     private $container;
 
+    /**
+     * Dispatcher constructor.
+     * @param Container $container
+     */
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * dispatch route
+     */
     public function dispatch()
     {
         $this->request = Request::getInstance();
@@ -25,9 +32,13 @@ class Dispatcher
         $this->container->call($controller, $this->request->getParams());
     }
 
+    /**
+     * check and get controller method
+     * @return string
+     */
     private function loadController(): string
     {
-        $controller = sprintf('\Src\Controller\%sController', ucfirst($this->request->getController()));
+        $controller = $this->request->getController();
         $action = $this->request->getAction();
 
         if(!class_exists($controller) || !method_exists($controller, $action)) {

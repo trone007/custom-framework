@@ -1,7 +1,6 @@
 <?php
 namespace Src\Model;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Annotation as ORM;
 
 /**
@@ -53,19 +52,6 @@ class User
      * @var \DateTime
      */
     private $updatedAt;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Src\Model\User",
-     *     mappedBy="user"
-     * )
-     */
-    private $tasks;
-
-    public function __construct()
-    {
-        $this->tasks = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -189,8 +175,8 @@ class User
         $this->updatedAt = $updatedAt;
     }
 
-    public function addTask(Task $task)
+    public function authenticate(string $password, callable $checkHash): bool
     {
-        $this->tasks[] = $task;
+        return $checkHash($password, $this->password);
     }
 }

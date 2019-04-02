@@ -13,6 +13,9 @@ class Request
 
     private static $_instance = null;
 
+    /**
+     * Request constructor.
+     */
     private function __construct()
     {
         $this->url = $_SERVER["REQUEST_URI"];
@@ -23,6 +26,10 @@ class Request
     protected function __clone() {
     }
 
+    /**
+     * may be singleton needed
+     * @return Request|null
+     */
     static public function getInstance() {
         if(is_null(self::$_instance))
         {
@@ -31,18 +38,31 @@ class Request
         return self::$_instance;
     }
 
-    public function postParameter(string $key)
+    /**
+     * get POST parameter
+     * @param string $key
+     * @param null $default
+     * @return null|string
+     */
+    public function postParameter(string $key, $default = null)
     {
-        return $this->post[$key] ?? null;
+        return !empty($this->post[$key]) ?
+            $this->secureInputData($this->post[$key])
+            :
+            $default;
     }
 
     /**
+     * get GET parameter
      * @param string $key
      * @return mixed|null
      */
-    public function getParameter(string $key)
+    public function getParameter(string $key, $default = null)
     {
-        return $this->get[$key] ?? null;
+        return !empty($this->get[$key]) ?
+            $this->secureInputData($this->get[$key])
+            :
+            $default;
     }
 
 
@@ -56,9 +76,10 @@ class Request
     }
 
     /**
-     * @return mixed
+     * get action name from route
+     * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -71,12 +92,11 @@ class Request
         $this->action = $action;
     }
 
-
-
     /**
-     * @return mixed
+     * get controller name from route
+     * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         return $this->controller;
     }
@@ -92,7 +112,7 @@ class Request
     /**
      * @return mixed
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
@@ -105,5 +125,34 @@ class Request
         $this->params = $params;
     }
 
+    /**
+     * check request is post type
+     * @return bool
+     */
+    public function isPost(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
 
+    /**
+     * check request is get type
+     * @return bool
+     */
+    public function isGet(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'GET';
+    }
+
+    /**
+     * validate data from request strings
+     * @param $data
+     * @return string
+     */
+    private function secureInputData($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 }

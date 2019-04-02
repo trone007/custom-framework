@@ -1,0 +1,42 @@
+{% extends "default.html.twig" %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/base.css?v=1">
+{% endblock %}
+{% block content %}
+    <header class="py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-11 col-md-11 col-sm-1">
+                    <div class="logo">
+                        <h1> <a href="/"><span class="fa fa-envelope-open-o" aria-hidden="true"></span>Task Manager</a></h1>
+                    </div>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1">
+                    {% if not session.get('user') %}
+                        <a class="btn btn-white" href="/login">Login</a>
+                    {% else %}
+                        <a class="btn btn-white" href="/logout">Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="body">
+        <div class="container pt-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% block breadcrumb %}{% endblock %}
+                </ol>
+            </nav>
+        </div>
+        {% block body_content %}
+        {% endblock %}
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-white">
+                Welcome to my test page
+            </p>
+        </div>
+    </footer>
+{% endblock %}

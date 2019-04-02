@@ -1,0 +1,82 @@
+{% extends "layout.html.twig" %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Task list</li>
+{% endblock %}
+
+{% block body_content %}
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#<a href="#"><i class="fa fa-fw fa-sort js-sort" data-id="id"></i></a></th>
+                        <th scope="col" class="w-25">User Name<a href="#"><i class="fa fa-fw fa-sort js-sort" data-id="username"></i></a></th>
+                        <th scope="col" class="w-25">E-mail<a href="#"><i class="fa fa-fw fa-sort js-sort" data-id="email"></i></a></th>
+                        <th scope="col" class="w-50">Message</th>
+                        <th scope="col">Status<a href="#"><i class="fa fa-fw fa-sort js-sort" data-id="status"></i></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <th scope="row">
+                                {% if session.get('user') %}
+                                    <a href="/edit-task?id={{ task.id }}">{{ task.id }}</a>
+                                {% else %}
+                                    {{ task.id }}
+                                {% endif %}
+                            </th>
+                            <td>{{ task.username | raw }}</td>
+                            <td>{{ task.email | raw }}</td>
+                            <td>{{ task.text | raw }}</td>
+                            <td>
+                                <div class="btn {{
+                                    task.status == 'NEW' ? 'btn-info' :
+                                    task.status == 'IN_PROGRESS' ? 'btn-success' : 'btn-danger' }}">
+                                    {{ task.statusAsString | raw }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-lg-11 col-md-11 col-sm-11">
+                {% include 'Components/pagination.html.twig' with {'pages': pages, 'currentPage': currentPage}%}
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">
+                <button class="btn btn-info" data-toggle="modal" data-target="#task-block">Add new</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="task-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create new Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/create-task" method="post">
+                    <div class="modal-body">
+                            <input type="text" class="form-control mb-1" name="username" placeholder="Your name" required>
+                            <input type="email" class="form-control mb-1" name="email" placeholder="Your E-mail address" required>
+                            <textarea class="form-control mb-1" name="message" placeholder="Enter your message" rows="10" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info">Submit data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/js/urlComponent.js?v=1"></script>
+    <script src="/js/app.js?v=1"></script>
+{% endblock %}

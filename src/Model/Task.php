@@ -9,6 +9,11 @@ use Doctrine\ORM\Annotation as ORM;
  **/
 class Task
 {
+    const STATUSES = [
+        'NEW' => 'NEW',
+        'IN_PROGRESS' => 'IN_PROGRESS',
+        'CLOSED' => 'CLOSED'
+    ];
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -16,16 +21,6 @@ class Task
      * @var int
      */
     private $id;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Src\Model\User",
-     *     inversedBy="tasks"
-     * )
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @var User
-     */
-    private $user;
 
     /**
      * @ORM\Column(type="string")
@@ -46,10 +41,29 @@ class Task
     private $updatedAt;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
-     * @var boolean
+     * @ORM\Column(name="status", type="string")
+     * @var string
      */
-    private $isActive;
+    private $status;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $email;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+        $this->status = self::STATUSES['NEW'];
+    }
 
     /**
      * @return int
@@ -66,24 +80,6 @@ class Task
     public function setId(int $id): Task
     {
         $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param User $user
-     * @return Task
-     */
-    public function setUser(User $user): Task
-    {
-        $this->user = $user;
         return $this;
     }
 
@@ -116,9 +112,10 @@ class Task
     /**
      * @param \DateTime $createdAt
      */
-    public function setCreatedAt(\DateTime $createdAt): void
+    public function setCreatedAt(\DateTime $createdAt): Task
     {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**
@@ -131,25 +128,87 @@ class Task
 
     /**
      * @param \DateTime $updatedAt
+     * @return Task
      */
-    public function setUpdatedAt(\DateTime $updatedAt): void
+    public function setUpdatedAt(\DateTime $updatedAt): Task
     {
         $this->updatedAt = $updatedAt;
+        return $this;
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isActive(): bool
+    public function getUsername(): string
     {
-        return $this->isActive;
+        return $this->username;
     }
 
     /**
-     * @param bool $isActive
+     * @param string $username
+     * @return Task
      */
-    public function setIsActive(bool $isActive): void
+    public function setUsername(string $username): Task
     {
-        $this->isActive = $isActive;
+        $this->username = $username;
+        return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return Task
+     */
+    public function setEmail(string $email): Task
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function isStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return Task
+     */
+    public function setStatus(string $status): Task
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusAsString(string $status = null): string
+    {
+        $status = $status ?? $this->status;
+
+        switch ($status) {
+            case self::STATUSES['NEW']:
+                return 'New';
+                break;
+            case self::STATUSES['IN_PROGRESS']:
+                return 'In progress';
+                break;
+            case self::STATUSES['CLOSED']:
+                return 'Closed';
+                break;
+        }
+    }
+
+
 }

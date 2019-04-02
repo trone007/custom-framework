@@ -1,17 +1,21 @@
 <?php
 
-use function DI\create;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
+use Src\Service\CredentialsService;
+use Src\Service\CredentialsServiceInterface;
+use Src\Service\TaskService;
+use Src\Service\TaskServiceInterface;
 use Src\Service\UserService;
 use Src\Service\UserServiceInterface;
 
 
 return [
+    // Configure EntityManagerInterface realization
     EntityManagerInterface::class => function() {
         $isDevMode = boolval($_ENV['DEV_MODE']);
-        $entityPath = [ROOT . $_ENV['ENTITY_DIRECTORY']];
+        $entityPath = [sprintf('%s/../%s', __DIR__, $_ENV['ENTITY_DIRECTORY'])];
 
         $config = Setup::createAnnotationMetadataConfiguration($entityPath, $isDevMode);
 
@@ -28,7 +32,7 @@ return [
         return new \Twig\Environment($loader);
     },
 
-    UserServiceInterface::class => function(\DI\Container $c) {
-        return new UserService($c->get(EntityManagerInterface::class));
-    }
+    CredentialsServiceInterface::class => DI\get(CredentialsService::class),
+    TaskServiceInterface::class => DI\get(TaskService::class),
+    UserServiceInterface::class => DI\get(UserService::class)
 ];

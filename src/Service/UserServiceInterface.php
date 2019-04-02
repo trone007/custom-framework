@@ -5,9 +5,9 @@ use Src\Exceptions\WrongCredentialsException;
 interface UserServiceInterface
 {
     /**
-     * @param $username
-     * @param $password
+     * @param string $username
+     * @param string $password
      * @throws WrongCredentialsException
      */
-    function authenticate($username, $password): void;
+    public function authenticate(string $username, string $password): void;
 }

@@ -1,0 +1,24 @@
+{% extends 'layout.html.twig' %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item active">Edit task #{{ task.id }}</li>
+{% endblock %}
+
+{% block body_content %}
+<div class="container">
+    <form action="/edit-task?id={{ task.id }}" method="post">
+        <div class="modal-body">
+            <input type="text" class="form-control mb-1 disabled" value="{{ task.username | raw  }}" required disabled>
+            <input type="email" class="form-control mb-1 disabled" value="{{ task.email | raw  }}" required disabled>
+            <textarea class="form-control mb-1" name="message" placeholder="Enter your message" rows="10" required>{{ task.text | raw  }}</textarea>
+            <select class="form-control mb-1" name="status" required>
+                {% for status in statuses %}
+                    <option value="{{ status }}" {% if status == task.status %}selected="selected"{% endif %}>{{ task.statusAsString(status) }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-info">Submit data</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

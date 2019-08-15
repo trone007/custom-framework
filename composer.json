@@ -1,6 +1,6 @@
 {
     "name": "stone/test",
-    "description": "bee jee test app",
+    "description": "custom framework",
     "type": "project",
     "autoload": {
         "psr-4": {
